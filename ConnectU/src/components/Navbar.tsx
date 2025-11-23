@@ -36,7 +36,13 @@ export default function WebNavbar() {
       <div className="flex justify-between items-center max-w-7xl mx-auto">
         {/* Logo/Brand */}
         <div className="flex items-center space-x-8">
-          <h1 className="text-2xl font-bold text-white">ConnectU</h1>
+          <Link to="/" className="flex items-center">
+            <img 
+              src="/LOGOCONECTU.png" 
+              alt="ConnectU Logo" 
+              className="h-8 w-auto" // Ajusta el tamaño según necesites
+            />
+          </Link>
           
           {/* Navigation Items */}
           <div className="flex space-x-6">

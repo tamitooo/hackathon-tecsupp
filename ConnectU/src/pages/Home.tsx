@@ -243,15 +243,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Match Type Badge */}
-        <div className="flex justify-center mb-6">
-          <div className={`flex items-center gap-2 px-4 py-2 rounded-full ${getMatchTypeColor(currentCandidate.matchType)}`}>
-            {getMatchTypeIcon(currentCandidate.matchType)}
-            <span className="font-semibold text-sm capitalize">
-              {currentCandidate.matchType.toLowerCase().replace('_', ' ')}
-            </span>
-          </div>
-        </div>
+  
 
         {/* Swipe Card */}
         <div className="max-w-md mx-auto">

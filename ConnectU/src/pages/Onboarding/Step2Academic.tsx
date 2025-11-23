@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import Input from "../../components/Input"
 import Button from "../../components/Button"
 
@@ -30,8 +30,14 @@ export default function Step2Academic() {
     <div className="min-h-screen bg-[#1B1C31]">
       {/* Navbar */}
       <nav className="bg-[#1B1C31] border-b border-[#A09BD3] px-6 py-4">
-        <div className="">
-          <h1 className="text-2xl font-bold text-white">ConnectU</h1>
+        <div className="flex justify-between items-center max-w-7xl mx-auto">
+          <Link to="/" className="flex items-center">
+            <img 
+              src="/LOGOCONECTU.png" 
+              alt="ConnectU Logo" 
+              className="h-8 w-auto" // Ajusta el tamaño según necesites
+            />
+          </Link>
         </div>
       </nav>
 
