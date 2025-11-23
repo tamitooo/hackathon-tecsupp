@@ -3,8 +3,11 @@
 import { useState, useEffect } from "react"
 import SwipeCard from "../components/SwipeCard"
 import Button from "../components/Button"
+import RiskCard from "../components/RiskCard"
+import PageTransition from "../components/PageTransition"
 import { useNavigate } from "react-router-dom"
-import { Target} from "lucide-react"
+import { Target, Users, TrendingUp } from "lucide-react"
+import { useAuthStore } from "../store/authStore"
 
 interface Candidate {
   id: string
@@ -25,6 +28,8 @@ interface Candidate {
 }
 
 export default function Home() {
+  const { user } = useAuthStore()
+  const [showSwipeMode, setShowSwipeMode] = useState(false)
   const [candidates] = useState<Candidate[]>([
     {
       id: "1",
@@ -136,10 +141,10 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#1B1C31] flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 rounded-full border-4 border-[#A09BD3] border-t-[#6149E9] animate-spin mx-auto" />
-          <p className="mt-4 text-[#A09BD3] text-lg">Finding great matches for you...</p>
+          <div className="w-16 h-16 rounded-full border-4 border-[#A09BD3]/30 border-t-[#6149E9] animate-spin mx-auto shadow-lg shadow-[#6149E9]/30" />
+          <p className="mt-4 text-white text-lg font-medium">Finding great matches for you...</p>
         </div>
       </div>
     )
@@ -147,115 +152,248 @@ export default function Home() {
 
   if (candidates.length === 0 || currentIndex >= candidates.length) {
     return (
-      <div className="min-h-screen bg-[#1B1C31]">
+      <div className="flex flex-col items-center justify-center min-h-[80vh] text-center p-8">
+        <div className="w-32 h-32 bg-gradient-to-br from-[#6149E9]/20 to-[#A09BD3]/20 rounded-3xl flex items-center justify-center mb-6 backdrop-blur-sm border border-[#A09BD3]/20">
+          <Target size={60} className="text-[#6149E9]" />
+        </div>
+        <h2 className="text-4xl font-bold text-white mb-4">Great job! 🎉</h2>
+        <p className="text-white text-lg mb-2">You've reviewed all potential matches</p>
+        <p className="text-[#A09BD3] text-sm mb-8">Check back later for new candidates or review your matches</p>
+        <div className="flex gap-4">
+          <Button 
+            onClick={() => window.location.reload()}
+            variant="outline"
+            size="lg"
+          >
+            Swipe Again
+          </Button>
+          <Button onClick={() => navigate("/matches")} size="lg">
+            View My Matches
+          </Button>
+        </div>
+      </div>
+    )
+  }
 
-        <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-8">
-          <div className="w-24 h-24 bg-[#2A2B45] rounded-full flex items-center justify-center mb-6">
-            <Target size={40} className="text-[#A09BD3]" />
+  // Dashboard View (Default)
+  if (!showSwipeMode) {
+    return (
+      <div className="min-h-screen">
+        <div className="max-w-6xl mx-auto">
+          {/* Welcome Header */}
+          <div className="mb-8">
+            <h1 className="text-4xl font-bold text-white mb-2">
+              Welcome back, {user?.firstName || 'Student'}! 👋
+            </h1>
+            <p className="text-[#A09BD3] text-lg">
+              Here's your academic overview and recommendations
+            </p>
           </div>
-          <h2 className="text-2xl font-bold text-white mb-4">Great job! 🎉</h2>
-          <p className="text-[#A09BD3] text-lg mb-2">You've reviewed all potential matches</p>
-          <p className="text-[#A09BD3] text-sm mb-8">Check back later for new candidates or review your matches</p>
-          <div className="flex gap-4">
+
+          {/* Risk Card - Prominent */}
+          <div className="mb-8">
+            <RiskCard 
+              riskLevel="medium"
+              riskScore={65}
+              courses={[
+                { name: "Cálculo II", grade: 12, risk: "high" },
+                { name: "Física I", grade: 13, risk: "medium" },
+                { name: "Programación", grade: 14, risk: "medium" }
+              ]}
+            />
+          </div>
+
+          {/* CTA Section */}
+          <div className="bg-gradient-to-r from-[#6149E9]/10 to-[#A09BD3]/10 border border-[#6149E9]/30 rounded-2xl p-8 mb-8 text-center">
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 bg-gradient-to-br from-[#6149E9] to-[#A09BD3] rounded-2xl flex items-center justify-center">
+                <Users size={32} className="text-white" />
+              </div>
+            </div>
+            <h2 className="text-2xl font-bold text-white mb-3">Find Your Perfect Mentor</h2>
+            <p className="text-[#A09BD3] mb-6 max-w-2xl mx-auto">
+              Based on your academic risk and interests, we've found mentors who can help you succeed. 
+              Start swiping to connect with students who match your needs!
+            </p>
             <Button 
-              onClick={() => window.location.reload()}
-              variant="outline"
+              size="lg" 
+              onClick={() => setShowSwipeMode(true)}
+              className="gap-2"
             >
-              Swipe Again
+              <Users size={20} />
+              Start Matching
             </Button>
-            <Button onClick={() => navigate("/matches")}>
-              View My Matches
-            </Button>
+          </div>
+
+          {/* Stats Overview */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="bg-[#1B1C31]/80 border border-[#A09BD3]/10 rounded-2xl p-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-[#6149E9]/20 rounded-xl flex items-center justify-center">
+                  <Users size={24} className="text-[#6149E9]" />
+                </div>
+                <div>
+                  <p className="text-[#A09BD3] text-sm">Potential Matches</p>
+                  <p className="text-white text-2xl font-bold">{candidates.length}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-[#1B1C31]/80 border border-[#A09BD3]/10 rounded-2xl p-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center">
+                  <TrendingUp size={24} className="text-green-400" />
+                </div>
+                <div>
+                  <p className="text-[#A09BD3] text-sm">Compatibility</p>
+                  <p className="text-white text-2xl font-bold">85%</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-[#1B1C31]/80 border border-[#A09BD3]/10 rounded-2xl p-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-yellow-500/20 rounded-xl flex items-center justify-center">
+                  <Target size={24} className="text-yellow-400" />
+                </div>
+                <div>
+                  <p className="text-[#A09BD3] text-sm">Active Mentors</p>
+                  <p className="text-white text-2xl font-bold">24</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Recommendations Section */}
+          <div className="bg-[#1B1C31]/80 border border-[#A09BD3]/10 rounded-2xl p-6">
+            <h3 className="text-xl font-bold text-white mb-4">💡 Recommendations for You</h3>
+            <ul className="space-y-3">
+              <li className="flex items-start gap-3 p-4 bg-[#2A2B45] rounded-lg">
+                <div className="w-2 h-2 bg-[#6149E9] rounded-full mt-2"></div>
+                <div>
+                  <p className="text-white font-semibold">Focus on Calculus II</p>
+                  <p className="text-[#A09BD3] text-sm">Your highest risk course. Consider finding a mentor who excels in mathematics.</p>
+                </div>
+              </li>
+              <li className="flex items-start gap-3 p-4 bg-[#2A2B45] rounded-lg">
+                <div className="w-2 h-2 bg-[#6149E9] rounded-full mt-2"></div>
+                <div>
+                  <p className="text-white font-semibold">Study Groups Available</p>
+                  <p className="text-[#A09BD3] text-sm">Join collaborative sessions with peers in your same courses.</p>
+                </div>
+              </li>
+              <li className="flex items-start gap-3 p-4 bg-[#2A2B45] rounded-lg">
+                <div className="w-2 h-2 bg-[#6149E9] rounded-full mt-2"></div>
+                <div>
+                  <p className="text-white font-semibold">Career Guidance</p>
+                  <p className="text-[#A09BD3] text-sm">Connect with mentors who have internship experience in your field of interest.</p>
+                </div>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
     )
   }
 
-  const currentCandidate = candidates[currentIndex]
-
+  // Swipe Mode View
   return (
-    <div className="min-h-screen bg-[#1B1C31]">
+    <PageTransition>
+      <div className="min-h-screen">
+        {/* Back Button */}
+        <div className="max-w-6xl mx-auto mb-6">
+        <Button 
+          variant="outline" 
+          size="sm"
+          onClick={() => setShowSwipeMode(false)}
+        >
+          ← Back to Dashboard
+        </Button>
+      </div>
 
       {/* Main Content */}
-      <div className="max-w-4xl mx-auto p-8">
+      <div className="max-w-6xl mx-auto">
         {/* Header with Stats */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
           <div className="mb-6 lg:mb-0">
-            <h1 className="text-3xl font-bold text-white flex items-center gap-3">
-              <Target size={32} className="text-[#6149E9]" />
-              Find Your Match
+            <h1 className="text-4xl font-bold text-white flex items-center gap-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-[#6149E9] to-[#A09BD3] rounded-xl flex items-center justify-center">
+                <Target size={24} className="text-white" />
+              </div>
+              Discover Matches
             </h1>
-            <p className="text-[#A09BD3] text-lg mt-2">
+            <p className="text-[#A09BD3] text-lg mt-2 ml-1">
               Swipe right to connect, left to pass
             </p>
           </div>
 
-          {/* Quick Stats */}
-          <div className="flex gap-6">
-            <div className="text-center">
-              <div className="text-white font-bold text-xl">{stats.swipesToday}</div>
-              <p className="text-[#A09BD3] text-sm">Today</p>
+          {/* Quick Stats Cards */}
+          <div className="flex gap-4">
+            <div className="bg-[#1B1C31]/50 backdrop-blur-sm border border-[#A09BD3]/10 rounded-xl px-6 py-4 text-center">
+              <div className="text-[#6149E9] font-bold text-2xl">{stats.swipesToday}</div>
+              <p className="text-[#A09BD3] text-xs font-medium">Today</p>
             </div>
-            <div className="text-center">
-              <div className="text-white font-bold text-xl">{stats.matchesThisWeek}</div>
-              <p className="text-[#A09BD3] text-sm">Matches</p>
+            <div className="bg-[#1B1C31]/50 backdrop-blur-sm border border-[#A09BD3]/10 rounded-xl px-6 py-4 text-center">
+              <div className="text-[#6149E9] font-bold text-2xl">{stats.matchesThisWeek}</div>
+              <p className="text-[#A09BD3] text-xs font-medium">Matches</p>
             </div>
-            <div className="text-center">
-              <div className="text-white font-bold text-xl">{stats.profileViews}</div>
-              <p className="text-[#A09BD3] text-sm">Views</p>
+            <div className="bg-[#1B1C31]/50 backdrop-blur-sm border border-[#A09BD3]/10 rounded-xl px-6 py-4 text-center">
+              <div className="text-[#6149E9] font-bold text-2xl">{stats.profileViews}</div>
+              <p className="text-[#A09BD3] text-xs font-medium">Views</p>
             </div>
           </div>
         </div>
 
-        {/* Progress */}
-        <div className="bg-[#2A2B45] rounded-2xl p-6 mb-8">
+        {/* Progress Card */}
+        <div className="bg-[#1B1C31]/50 backdrop-blur-sm border border-[#A09BD3]/10 rounded-2xl p-6 mb-8">
           <div className="flex justify-between items-center mb-3">
-            <span className="text-[#A09BD3] text-sm">
+            <span className="text-white text-sm font-medium">
               Candidate {currentIndex + 1} of {candidates.length}
             </span>
-            <span className="text-[#6149E9] font-semibold">
+            <span className="text-[#6149E9] font-bold text-lg">
               {Math.round(((currentIndex + 1) / candidates.length) * 100)}%
             </span>
           </div>
-          <div className="w-full bg-[#1B1C31] rounded-full h-2">
+          <div className="w-full bg-[#2A2B45] rounded-full h-3 overflow-hidden">
             <div 
-              className="bg-gradient-to-r from-[#6149E9] to-[#A09BD3] h-2 rounded-full transition-all duration-300"
+              className="bg-gradient-to-r from-[#6149E9] to-[#A09BD3] h-3 rounded-full transition-all duration-500 shadow-lg shadow-[#6149E9]/50"
               style={{ width: `${((currentIndex + 1) / candidates.length) * 100}%` }}
             ></div>
           </div>
         </div>
 
-  
-
         {/* Swipe Card */}
-        <div className="max-w-md mx-auto">
+        <div className="max-w-lg mx-auto">
           <SwipeCard 
-            candidate={currentCandidate} 
+            candidate={candidates[currentIndex]} 
             onSwipe={handleSwipe}
             additionalInfo={{
-              bio: currentCandidate.bio,
-              location: currentCandidate.location,
-              studyStyle: currentCandidate.studyStyle,
-              availability: currentCandidate.availability,
-              skills: currentCandidate.skills
+              bio: candidates[currentIndex].bio,
+              location: candidates[currentIndex].location,
+              studyStyle: candidates[currentIndex].studyStyle,
+              availability: candidates[currentIndex].availability,
+              skills: candidates[currentIndex].skills
             }}
           />
         </div>
 
-
-        {/* Tips */}
+        {/* Tips Card */}
         <div className="text-center mt-8">
-          <p className="text-[#A09BD3] text-sm">
-            💡 Tip: {currentCandidate.matchType === "MENTOR" 
-              ? "Great opportunity to learn from someone experienced!"
-              : currentCandidate.matchType === "PEER"
-              ? "Perfect for collaborative learning and mutual support!"
-              : "Excellent for career guidance and networking!"
-            }
-          </p>
+          <div className="inline-block bg-[#1B1C31]/50 backdrop-blur-sm border border-[#A09BD3]/10 rounded-xl px-6 py-4">
+            <p className="text-white text-sm font-medium">
+              💡 <span className="text-[#A09BD3]">
+                {candidates[currentIndex].matchType === "MENTOR" 
+                  ? "Great opportunity to learn from someone experienced!"
+                  : candidates[currentIndex].matchType === "PEER"
+                  ? "Perfect for collaborative learning and mutual support!"
+                  : "Excellent for career guidance and networking!"
+                }
+              </span>
+            </p>
+          </div>
+        </div>
         </div>
       </div>
-    </div>
+    </PageTransition>
   )
 }

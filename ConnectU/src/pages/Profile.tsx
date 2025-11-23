@@ -4,6 +4,7 @@ import { useAuthStore } from "../store/authStore"
 import { useUserStore } from "../store/userStore"
 import { useNavigate } from "react-router-dom"
 import Button from "../components/Button"
+import PageTransition from "../components/PageTransition"
 import { Edit2, Star, MapPin, Calendar, BookOpen, Trophy, Users, MessageCircle, Award } from "lucide-react"
 
 export default function Profile() {
@@ -32,7 +33,8 @@ export default function Profile() {
   }
 
   return (
-    <div className="min-h-screen bg-[#1B1C31]">
+    <PageTransition>
+      <div className="min-h-screen bg-[#1B1C31]">
 
       {/* Profile Content */}
       <div className="max-w-4xl mx-auto p-8">
@@ -193,7 +195,8 @@ export default function Profile() {
             </div>
           </div>
         </div>
+        </div>
       </div>
-    </div>
+    </PageTransition>
   )
 }

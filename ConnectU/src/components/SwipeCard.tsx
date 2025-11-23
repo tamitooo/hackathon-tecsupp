@@ -50,9 +50,9 @@ export default function SwipeCard({ candidate, onSwipe, additionalInfo }: SwipeC
   }
 
   return (
-    <div className="bg-[#2A2B45] rounded-2xl shadow-xl overflow-hidden border border-[#A09BD3] border-opacity-20 max-w-md w-full mx-auto">
+    <div className="bg-[#2A2B45] rounded-2xl shadow-xl overflow-hidden border border-[#A09BD3] border-opacity-20 max-w-md w-full mx-auto transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl">
       {/* Header with Avatar */}
-      <div className="relative bg-gradient-to-br from-[#6149E9] to-[#A09BD3] h-48 flex items-center justify-center p-6">
+      <div className="relative bg-gradient-to-br from-[#6149E9] to-[#A09BD3] h-48 flex items-center justify-center p-6 transition-all duration-300">
         <div className="text-center">
           <div className="w-20 h-20 rounded-full bg-white bg-opacity-20 flex items-center justify-center mx-auto mb-4 border-4 border-white border-opacity-30">
             {candidate.avatar ? (
@@ -174,16 +174,16 @@ export default function SwipeCard({ candidate, onSwipe, additionalInfo }: SwipeC
       <div className="flex gap-3 p-6 bg-[#1B1C31] border-t border-[#A09BD3] border-opacity-20">
         <button
           onClick={() => onSwipe("left")}
-          className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg border-2 border-[#A09BD3] text-[#A09BD3] hover:bg-red-500 hover:border-red-500 hover:text-white transition-all duration-300"
+          className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg border-2 border-[#A09BD3] text-[#A09BD3] hover:bg-red-500 hover:border-red-500 hover:text-white transition-all duration-300 transform hover:scale-105 active:scale-95"
         >
-          <X size={24} />
+          <X size={24} className="transition-transform duration-300 group-hover:rotate-90" />
           <span className="font-semibold">Pass</span>
         </button>
         <button
           onClick={() => onSwipe("right")}
-          className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-[#6149E9] text-white hover:bg-[#5540d6] transition-all duration-300 shadow-lg"
+          className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-gradient-to-r from-[#6149E9] to-[#7c5ef0] text-white hover:shadow-xl hover:shadow-[#6149E9]/50 transition-all duration-300 shadow-lg transform hover:scale-105 active:scale-95"
         >
-          <Heart size={24} />
+          <Heart size={24} className="transition-transform duration-300 hover:scale-110" />
           <span className="font-semibold">Connect</span>
         </button>
       </div>

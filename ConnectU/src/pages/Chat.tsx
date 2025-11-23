@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
-import { Send, ArrowLeft, Search } from "lucide-react"
+import { Send, Search } from "lucide-react"
 
 interface Message {
   id: string

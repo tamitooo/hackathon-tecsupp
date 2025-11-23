@@ -2,8 +2,8 @@
 
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import UserCard from "../components/UserCard"
 import Button from "../components/Button"
+import PageTransition from "../components/PageTransition"
 import { Users, Filter, Search, MessageCircle, Star } from "lucide-react"
 
 interface Match {
@@ -21,7 +21,7 @@ interface Match {
 }
 
 export default function Matches() {
-  const [matches, setMatches] = useState<Match[]>([
+  const [matches] = useState<Match[]>([
     {
       id: "1",
       name: "Sarah Chen",
@@ -147,7 +147,8 @@ export default function Matches() {
   }
 
   return (
-    <div className="min-h-screen bg-[#1B1C31]">
+    <PageTransition>
+      <div className="min-h-screen bg-[#1B1C31]">
 
       {/* Matches Content */}
       <div className="max-w-6xl mx-auto p-8">
@@ -296,7 +297,8 @@ export default function Matches() {
             </div>
           ))}
         </div>
+        </div>
       </div>
-    </div>
+    </PageTransition>
   )
 }

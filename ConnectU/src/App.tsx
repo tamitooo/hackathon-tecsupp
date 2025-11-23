@@ -25,29 +25,29 @@ import Error404 from "@/pages/Error404"
 import { Toaster } from "@/components/ui/toaster"
 
 // Protected route component - MODIFICADO PARA TESTING
-interface PrivateRouteProps {
-  element: React.ReactElement
-  requireOnboarding?: boolean
-}
+// interface PrivateRouteProps {
+//   element: React.ReactElement
+//   requireOnboarding?: boolean
+// }
 
-const PrivateRoute: React.FC<PrivateRouteProps> = ({ 
-  element, 
-  requireOnboarding = false 
-}) => {
-  const token = useAuthStore((state) => state.token)
-  const onboardingCompleted = useAuthStore((state) => state.onboardingCompleted)
+// const PrivateRoute: React.FC<PrivateRouteProps> = ({ 
+//   element, 
+//   requireOnboarding = false 
+// }) => {
+//   const token = useAuthStore((state) => state.token)
+//   const onboardingCompleted = useAuthStore((state) => state.onboardingCompleted)
 
-  // COMENTADO PARA TESTING - Permite acceso sin token
-  // if (!token) {
-  //   return <Navigate to="/login" replace />
-  // }
+//   // COMENTADO PARA TESTING - Permite acceso sin token
+//   // if (!token) {
+//   //   return <Navigate to="/login" replace />
+//   // }
 
-  if (requireOnboarding && !onboardingCompleted) {
-    return <Navigate to="/onboarding/step1" replace />
-  }
+//   if (requireOnboarding && !onboardingCompleted) {
+//     return <Navigate to="/onboarding/step1" replace />
+//   }
 
-  return element
-}
+//   return element
+// }
 
 // Ruta pública para testing - accesible sin autenticación
 const PublicRoute: React.FC<{ element: React.ReactElement }> = ({ element }) => {
