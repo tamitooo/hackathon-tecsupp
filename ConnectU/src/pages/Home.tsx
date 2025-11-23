@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import SwipeCard from "../components/SwipeCard"
 import Button from "../components/Button"
 import { useNavigate } from "react-router-dom"
-import { Users, Target, Star, Zap} from "lucide-react"
+import { Target} from "lucide-react"
 
 interface Candidate {
   id: string
@@ -25,7 +25,7 @@ interface Candidate {
 }
 
 export default function Home() {
-  const [candidates, setCandidates] = useState<Candidate[]>([
+  const [candidates] = useState<Candidate[]>([
     {
       id: "1",
       name: "Sarah Chen",
@@ -133,23 +133,6 @@ export default function Home() {
     }
   }
 
-  const getMatchTypeIcon = (type: string) => {
-    switch (type) {
-      case "MENTOR": return <Zap className="text-yellow-500" size={16} />
-      case "PEER": return <Users className="text-blue-500" size={16} />
-      case "VOCATIONAL_BRIDGE": return <Target className="text-green-500" size={16} />
-      default: return <Star size={16} />
-    }
-  }
-
-  const getMatchTypeColor = (type: string) => {
-    switch (type) {
-      case "MENTOR": return "bg-yellow-500 bg-opacity-20 text-yellow-500"
-      case "PEER": return "bg-blue-500 bg-opacity-20 text-blue-500"
-      case "VOCATIONAL_BRIDGE": return "bg-green-500 bg-opacity-20 text-green-500"
-      default: return "bg-[#6149E9] bg-opacity-20 text-[#6149E9]"
-    }
-  }
 
   if (loading) {
     return (

@@ -7,13 +7,21 @@ import { cn } from '@/lib/utils'
 
 function Avatar({
   className,
+  size = 'md',
   ...props
-}: React.ComponentProps<typeof AvatarPrimitive.Root>) {
+}: React.ComponentProps<typeof AvatarPrimitive.Root> & {
+  size?: 'sm' | 'md' | 'lg' | 'xl'
+}) {
   return (
     <AvatarPrimitive.Root
       data-slot="avatar"
+      data-size={size}
       className={cn(
-        'relative flex size-8 shrink-0 overflow-hidden rounded-full',
+        'relative flex shrink-0 overflow-hidden rounded-full bg-gradient-to-br from-[#6149E9] to-[#A09BD3]',
+        size === 'sm' && 'size-8',
+        size === 'md' && 'size-12',
+        size === 'lg' && 'size-16',
+        size === 'xl' && 'size-24',
         className,
       )}
       {...props}
@@ -28,7 +36,7 @@ function AvatarImage({
   return (
     <AvatarPrimitive.Image
       data-slot="avatar-image"
-      className={cn('aspect-square size-full', className)}
+      className={cn('aspect-square size-full object-cover', className)}
       {...props}
     />
   )
@@ -42,7 +50,7 @@ function AvatarFallback({
     <AvatarPrimitive.Fallback
       data-slot="avatar-fallback"
       className={cn(
-        'bg-muted flex size-full items-center justify-center rounded-full',
+        'flex size-full items-center justify-center rounded-full bg-gradient-to-br from-[#6149E9] to-[#A09BD3] text-white font-semibold',
         className,
       )}
       {...props}

@@ -16,6 +16,7 @@ const buttonVariants = cva(
         sm: "px-3 py-2 text-sm",
         md: "px-4 py-2.5 text-base",
         lg: "px-6 py-3 text-lg",
+        icon: "p-2",
       },
     },
     defaultVariants: {
@@ -33,3 +34,4 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({ className, va
 Button.displayName = "Button"
 
 export default Button
+export { buttonVariants }
