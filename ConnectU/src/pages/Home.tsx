@@ -8,6 +8,7 @@ import PageTransition from "../components/PageTransition"
 import { useNavigate } from "react-router-dom"
 import { Target, Users, TrendingUp, Sparkles, Zap, Heart, BookOpen, Award, Clock } from "lucide-react"
 import { useAuthStore } from "../store/authStore"
+import { matchesApi } from "../api/matches"
 
 interface Candidate {
   id: string
@@ -30,7 +31,7 @@ interface Candidate {
 export default function Home() {
   const { user } = useAuthStore()
   const [showSwipeMode, setShowSwipeMode] = useState(false)
-  const [candidates] = useState<Candidate[]>([
+  const [candidates, setCandidates] = useState<Candidate[]>([
     {
       id: "1",
       name: "Sarah Chen",
@@ -109,12 +110,37 @@ export default function Home() {
   const fetchCandidates = async () => {
     try {
       setLoading(true)
-      // Simular API call
-      setTimeout(() => {
-        setLoading(false)
-      }, 1000)
+      
+      if (user?.id) {
+        const response = await matchesApi.getCandidates(user.id)
+        if (response.data.success) {
+          // Convertir datos del backend al formato que espera el frontend
+          const backendCandidates = response.data.data.map((candidate: any) => ({
+            id: candidate.id || candidate.user?.id,
+            name: `${candidate.user?.firstName} ${candidate.user?.lastName}`,
+            career: candidate.user?.career,
+            university: "UTEC", // Hardcoded por ahora
+            semester: candidate.user?.semester,
+            avatar: candidate.user?.profileImage,
+            commonInterests: candidate.commonInterests || [],
+            compatibility: candidate.compatibilityScore,
+            matchType: candidate.matchType,
+            matchReasons: candidate.matchReasons || [],
+            bio: candidate.user?.bio,
+            location: "Lima, Peru", // Hardcoded por ahora
+            studyStyle: "Collaborative", // Hardcoded por ahora
+            availability: ["Evenings", "Weekends"], // Hardcoded por ahora
+            skills: []
+          }))
+          
+          setCandidates(backendCandidates)
+        }
+      }
+      
+      setLoading(false)
     } catch (err) {
       console.error("Failed to fetch candidates:", err)
+      // Fallback a datos mock en caso de error
       setLoading(false)
     }
   }
@@ -122,11 +148,20 @@ export default function Home() {
   const handleSwipe = async (direction: "left" | "right") => {
     const candidate = candidates[currentIndex]
 
-    if (direction === "right") {
+    if (direction === "right" && user?.id) {
       try {
-        // Simular match exitoso
-        console.log("Matched with:", candidate.name)
-        // await matchesApi.requestMatch(candidate.id, candidate.matchType)
+        // Llamar al backend para crear el match
+        const response = await matchesApi.requestMatch(
+          user.id, 
+          candidate.id, 
+          candidate.name, 
+          candidate.matchType, 
+          candidate.compatibility
+        )
+        
+        if (response.data.success) {
+          console.log("✅ Match exitoso:", response.data.message)
+        }
       } catch (err) {
         console.error("Failed to request match:", err)
       }
