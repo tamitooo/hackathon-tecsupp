@@ -50,18 +50,22 @@ export default function Verify() {
 
   return (
     <div className="min-h-screen bg-[#1B1C31]">
-      {/* Navbar */}
-      <nav className="bg-[#1B1C31] border-b border-[#A09BD3] px-6 py-4">
-        <div className="flex justify-between items-center max-w-7xl mx-auto">
-          <Link to="/" className="flex items-center">
-            <img 
-              src="/LOGOCONECTU.png" 
-              alt="ConnectU Logo" 
-              className="h-8 w-auto" // Ajusta el tamaño según necesites
-            />
-          </Link>
-        </div>
-      </nav>
+    {/* Navbar */}
+        <nav className="bg-[#1B1C31] border-b border-[#A09BD3] px-6 py-4">
+          <div className="flex justify-between items-center max-w-7xl mx-auto">
+            <Link to="/" className="flex items-center gap-2">
+              <img 
+                src="/LOGOCONECTU.png" 
+                alt="ConnectU Logo" 
+                className="h-8 w-auto"
+              />
+
+              <span className="font-poppins text-white font-extralight text-xl">
+                ConectU
+              </span>
+            </Link>
+          </div>
+        </nav>
 
       {/* Verify Content */}
       <div className="flex items-center justify-center p-8 min-h-[calc(100vh-120px)]">

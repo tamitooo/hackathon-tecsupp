@@ -52,12 +52,16 @@ export default function Step1Basic() {
         {/* Navbar */}
         <nav className="bg-[#1B1C31] border-b border-[#A09BD3] px-6 py-4">
           <div className="flex justify-between items-center max-w-7xl mx-auto">
-            <Link to="/" className="flex items-center">
+            <Link to="/" className="flex items-center gap-2">
               <img 
                 src="/LOGOCONECTU.png" 
                 alt="ConnectU Logo" 
                 className="h-8 w-auto"
               />
+
+              <span className="font-poppins text-white font-extralight text-xl">
+                ConectU
+              </span>
             </Link>
           </div>
         </nav>
