@@ -4,6 +4,7 @@ import { useAuthStore } from "../store/authStore"
 import { useUserStore } from "../store/userStore"
 import { useNavigate } from "react-router-dom"
 import Button from "../components/Button"
+import PageTransition from "../components/PageTransition"
 import { Edit2, Star, MapPin, Calendar, BookOpen, Trophy, Users, MessageCircle, Award } from "lucide-react"
 
 export default function Profile() {
@@ -11,12 +12,17 @@ export default function Profile() {
   const { badges, stats } = useUserStore()
   const navigate = useNavigate()
 
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-[#1B1C31] flex items-center justify-center">
-        <div className="text-white text-lg">Loading...</div>
-      </div>
-    )
+  // Mock user para testing si no hay usuario en el store
+  const currentUser = user || {
+    id: "mock-user-1",
+    email: "student@utec.edu.pe",
+    firstName: "Maria",
+    lastName: "Rodriguez",
+    university: "UTEC",
+    career: "Computer Science",
+    semester: 5,
+    avatar: "",
+    bio: "Passionate about technology and learning. Always looking for study partners and mentors to grow together. Love coding, mathematics, and solving complex problems."
   }
 
   // Datos de ejemplo para enriquecer el perfil
@@ -32,23 +38,31 @@ export default function Profile() {
   }
 
   return (
-    <div className="min-h-screen bg-[#1B1C31]">
+    <PageTransition>
+      <div className="min-h-screen bg-[#1B1C31]">
 
       {/* Profile Content */}
       <div className="max-w-4xl mx-auto p-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Sidebar - Información básica */}
-          <div className="lg:col-span-1 space-y-6">
+          <div className="">
             {/* Avatar Section */}
-            <div className="bg-[#2A2B45] rounded-2xl p-6 text-center">
-              <div className="w-32 h-32 rounded-full bg-gradient-to-br from-[#6149E9] to-[#A09BD3] mx-auto flex items-center justify-center text-white text-5xl font-bold mb-4">
-                {user.firstName.charAt(0)}
-              </div>
+            <div className="bg-[#2A2B45]  mb-4 rounded-2xl p-6 text-center">
+              {currentUser.avatar ? (
+                <img 
+                  src={currentUser.avatar} 
+                  alt="Profile" 
+                  className="w-32 h-32 rounded-full object-cover border-4 border-[#6149E9] mx-auto mb-4 transform hover:scale-105 transition-all duration-300"
+                />
+              ) : (
+                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-[#6149E9] to-[#A09BD3] mx-auto flex items-center justify-center text-white text-5xl font-bold mb-4 transform hover:scale-105 transition-all duration-300">
+                  {currentUser.firstName.charAt(0)}
+                </div>
+              )}
               <h1 className="text-2xl font-bold text-white">
-                {user.firstName} {user.lastName}
+                {currentUser.firstName} {currentUser.lastName}
               </h1>
-              <p className="text-[#A09BD3] text-lg">{user.career}</p>
-              <p className="text-[#A09BD3] text-sm mt-2">{user.university}</p>
+              <p className="text-[#A09BD3] text-lg">{currentUser.career}</p>
+              <p className="text-[#A09BD3] text-sm mt-2">{currentUser.university}</p>
               
               {/* Detalles adicionales */}
               <div className="mt-4 space-y-2">
@@ -62,7 +76,7 @@ export default function Profile() {
                 </div>
                 <div className="flex items-center justify-center gap-2 text-[#A09BD3]">
                   <BookOpen size={16} />
-                  <span>Semester {user.semester}</span>
+                  <span>Semester {currentUser.semester}</span>
                 </div>
               </div>
             </div>
@@ -111,7 +125,7 @@ export default function Profile() {
                 </Button>
               </div>
               <p className="text-[#A09BD3] text-lg leading-relaxed">
-                {user.bio || "Hello! I'm passionate about learning and collaborating with fellow students. I believe in the power of teamwork and mutual support in achieving academic success."}
+                {currentUser.bio || "Hello! I'm passionate about learning and collaborating with fellow students. I believe in the power of teamwork and mutual support in achieving academic success."}
               </p>
             </div>
 
@@ -193,7 +207,8 @@ export default function Profile() {
             </div>
           </div>
         </div>
+        </div>
       </div>
-    </div>
+    </PageTransition>
   )
 }

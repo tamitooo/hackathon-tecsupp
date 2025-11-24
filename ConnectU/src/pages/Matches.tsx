@@ -2,8 +2,8 @@
 
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import UserCard from "../components/UserCard"
 import Button from "../components/Button"
+import PageTransition from "../components/PageTransition"
 import { Users, Filter, Search, MessageCircle, Star } from "lucide-react"
 
 interface Match {
@@ -21,7 +21,7 @@ interface Match {
 }
 
 export default function Matches() {
-  const [matches, setMatches] = useState<Match[]>([
+  const [matches] = useState<Match[]>([
     {
       id: "1",
       name: "Sarah Chen",
@@ -93,32 +93,6 @@ export default function Matches() {
   if (filteredMatches.length === 0) {
     return (
       <div className="min-h-screen bg-[#1B1C31]">
-        {/* Navbar */}
-        <nav className="bg-[#1B1C31] border-b border-[#A09BD3] px-8 py-6">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-4">
-              <div className="w-10 h-10 bg-[#6149E9] rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">C</span>
-              </div>
-              <div className="flex flex-col">
-                <h1 className="text-3xl font-bold text-white leading-tight">Connecta</h1>
-                <h1 className="text-3xl font-bold text-white leading-tight">UTEC</h1>
-              </div>
-            </div>
-            <div className="flex space-x-8">
-              <button className="text-[#A09BD3] hover:text-white transition-colors text-lg font-medium">
-                About
-              </button>
-              <button className="text-[#A09BD3] hover:text-white transition-colors text-lg font-medium">
-                Contact
-              </button>
-              <button className="text-[#A09BD3] hover:text-white transition-colors text-lg font-medium">
-                Help
-              </button>
-            </div>
-          </div>
-        </nav>
-
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-8">
           <div className="w-24 h-24 bg-[#2A2B45] rounded-full flex items-center justify-center mb-6">
             <Users size={40} className="text-[#A09BD3]" />
@@ -147,7 +121,8 @@ export default function Matches() {
   }
 
   return (
-    <div className="min-h-screen bg-[#1B1C31]">
+    <PageTransition>
+      <div className="min-h-screen bg-[#1B1C31]">
 
       {/* Matches Content */}
       <div className="max-w-6xl mx-auto p-8">
@@ -296,7 +271,8 @@ export default function Matches() {
             </div>
           ))}
         </div>
+        </div>
       </div>
-    </div>
+    </PageTransition>
   )
 }

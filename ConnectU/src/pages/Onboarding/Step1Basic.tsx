@@ -5,6 +5,8 @@ import { useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import Input from "../../components/Input"
 import Button from "../../components/Button"
+import Stepper from "../../components/Stepper"
+import PageTransition from "../../components/PageTransition"
 
 export default function Step1Basic() {
   const [data, setData] = useState({
@@ -45,81 +47,88 @@ export default function Step1Basic() {
   }
 
   return (
-    <div className="min-h-screen bg-[#1B1C31]">
-      {/* Navbar */}
-      <nav className="bg-[#1B1C31] border-b border-[#A09BD3] px-6 py-4">
-        <div className="flex justify-between items-center max-w-7xl mx-auto">
-          <Link to="/" className="flex items-center">
-            <img 
-              src="/LOGOCONECTU.png" 
-              alt="ConnectU Logo" 
-              className="h-8 w-auto" // Ajusta el tamaño según necesites
-            />
-          </Link>
-        </div>
-      </nav>
+    <PageTransition>
+      <div className="min-h-screen bg-[#1B1C31]">
+        {/* Navbar */}
+        <nav className="bg-[#1B1C31] border-b border-[#A09BD3] px-6 py-4">
+          <div className="flex justify-between items-center max-w-7xl mx-auto">
+            <Link to="/" className="flex items-center">
+              <img 
+                src="/LOGOCONECTU.png" 
+                alt="ConnectU Logo" 
+                className="h-8 w-auto"
+              />
+            </Link>
+          </div>
+        </nav>
 
-      {/* Content */}
-      <div className="flex items-center justify-center p-8 min-h-[calc(100vh-120px)]">
-        <div className="w-full max-w-2xl bg-[#1B1C31] text-white">
-          <div className="space-y-6">
-            <div className="text-center">
-              <h2 className="text-3xl font-bold text-white">Tell us about you</h2>
-              <p className="text-[#A09BD3] text-lg mt-2">Step 1 of 4: Basic Information</p>
+        {/* Content */}
+        <div className="flex items-center justify-center p-8 min-h-[calc(100vh-120px)]">
+          <div className="w-full max-w-2xl bg-[#1B1C31] text-white ">
+            {/* Progress Steps */}
+             <div className="flex justify-center mb-8">
+              <Stepper currentStep={1} totalSteps={4} />
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
-                <Input
-                  name="firstName"
-                  placeholder="First name"
-                  value={data.firstName}
-                  onChange={handleChange}
-                  error={errors.firstName}
-                />
-                <Input
-                  name="lastName"
-                  placeholder="Last name"
-                  value={data.lastName}
-                  onChange={handleChange}
-                  error={errors.lastName}
-                />
+            <div className="space-y-6">
+              <div className="text-center">
+                <h2 className="text-3xl font-bold text-white">Tell us about you</h2>
+                <p className="text-[#A09BD3] text-lg mt-2">Step 1 of 4: Basic Information</p>
               </div>
 
-              <Input
-                name="university"
-                placeholder="University name"
-                value={data.university}
-                onChange={handleChange}
-                error={errors.university}
-              />
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <Input
+                    name="firstName"
+                    placeholder="First name"
+                    value={data.firstName}
+                    onChange={handleChange}
+                    error={errors.firstName}
+                  />
+                  <Input
+                    name="lastName"
+                    placeholder="Last name"
+                    value={data.lastName}
+                    onChange={handleChange}
+                    error={errors.lastName}
+                  />
+                </div>
 
-              <Input
-                name="career"
-                placeholder="Career / Major"
-                value={data.career}
-                onChange={handleChange}
-                error={errors.career}
-              />
+                <Input
+                  name="university"
+                  placeholder="University name"
+                  value={data.university}
+                  onChange={handleChange}
+                  error={errors.university}
+                />
 
-              <Input
-                name="semester"
-                type="number"
-                placeholder="Current semester"
-                min="1"
-                max="12"
-                value={data.semester}
-                onChange={handleChange}
-                error={errors.semester}
-              />
+                <Input
+                  name="career"
+                  placeholder="Career / Major"
+                  value={data.career}
+                  onChange={handleChange}
+                  error={errors.career}
+                />
 
-              <Button type="submit" variant="primary" size="lg" className="w-full mt-6">
-                Next Step
-              </Button>
-            </form>
+                <Input
+                  name="semester"
+                  type="number"
+                  placeholder="Current semester (1-12)"
+                  min="1"
+                  max="12"
+                  value={data.semester}
+                  onChange={handleChange}
+                  error={errors.semester}
+                />
+
+                <Button type="submit" variant="primary" size="lg" className="w-full mt-6">
+                  Next Step
+                </Button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </PageTransition>
   )
 }
