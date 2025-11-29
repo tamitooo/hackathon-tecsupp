@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import Input from "../../components/Input"
 import Button from "../../components/Button"
@@ -18,6 +18,21 @@ export default function Step1Basic() {
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
   const navigate = useNavigate()
+
+  // Load data from sessionStorage on mount
+  useEffect(() => {
+    const savedData = sessionStorage.getItem("onboarding")
+    if (savedData) {
+      const parsed = JSON.parse(savedData)
+      setData({
+        firstName: parsed.firstName || "",
+        lastName: parsed.lastName || "",
+        university: parsed.university || "",
+        career: parsed.career || "",
+        semester: parsed.semester || "",
+      })
+    }
+  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target

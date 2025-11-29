@@ -4,6 +4,7 @@ import type React from "react"
 import { useState } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { useAuthStore } from "../../store/authStore"
+import { authApi } from "../../api/auth"
 import Input from "../../components/Input"
 import Button from "../../components/Button"
 
@@ -12,7 +13,7 @@ export default function Verify() {
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
-  const { email, setToken } = useAuthStore()
+  const { email, setToken, setUser } = useAuthStore()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -25,17 +26,37 @@ export default function Verify() {
 
     try {
       setLoading(true)
-      // SIMULACIÓN PARA TESTING - cualquier código de 6 dígitos funciona
-      // const response = await authApi.verifyCode(email, code)
+      const response = await authApi.verifyCode(email, code)
       
-      // Simula un token de prueba
-      const mockToken = "mock_token_" + Date.now()
-      setToken(mockToken)
-      
-      // Redirige al onboarding
-      navigate("/onboarding/step1")
+      if (response.data.success) {
+        const user = response.data.user
+        
+        // Generate a simple token
+        const token = `token_${user.id}_${Date.now()}`
+        setToken(token)
+        
+        // Store user data (even if incomplete) for onboarding to access user.id
+        setUser({
+          id: user.id,
+          email: user.email,
+          firstName: user.firstName || "",
+          lastName: user.lastName || "",
+          university: "",
+          career: "",
+          semester: 1
+        })
+        
+        // Check if user has completed onboarding
+        if (user.onboardingCompleted) {
+          // User already onboarded, go to main app
+          navigate("/home")
+        } else {
+          // New user or incomplete onboarding, go to onboarding
+          navigate("/onboarding/step1")
+        }
+      }
     } catch (err: any) {
-      setError(err.response?.data?.message || "Invalid verification code")
+      setError(err.response?.data?.detail || err.response?.data?.message || "Invalid verification code")
     } finally {
       setLoading(false)
     }

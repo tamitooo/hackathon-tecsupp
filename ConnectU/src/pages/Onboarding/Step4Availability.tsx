@@ -4,6 +4,7 @@ import type React from "react"
 import { useState, useMemo } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { useAuthStore } from "../../store/authStore"
+import { authApi } from "../../api/auth"
 import Button from "../../components/Button"
 import Stepper from "../../components/Stepper"
 import PageTransition from "../../components/PageTransition"
@@ -31,7 +32,7 @@ export default function Step4Availability() {
   const [isDragging, setIsDragging] = useState(false)
   const [dragValue, setDragValue] = useState(false)
   const navigate = useNavigate()
-  const { setOnboardingCompleted, setUser, email } = useAuthStore()
+  const { setOnboardingCompleted, setUser, email, user } = useAuthStore()
 
   // Calcular estadísticas
   const stats = useMemo(() => {
@@ -144,26 +145,57 @@ export default function Step4Availability() {
     e.preventDefault()
     try {
       setLoading(true)
+      
+      // Get all onboarding data from sessionStorage
       const onboarding = JSON.parse(sessionStorage.getItem("onboarding") || "{}")
 
-      // Crear usuario con la estructura correcta según tu interface User
-      const mockUser = {
-        id: Date.now().toString(),
-        email: email || onboarding.email || "user@universidad.edu.pe",
+      // Helper function to convert comma-separated string to array
+      const stringToArray = (str: string) => {
+        if (!str) return []
+        return str.split(',').map(item => item.trim()).filter(item => item.length > 0)
+      }
+
+      // Prepare the data to send to backend
+      const onboardingData = {
+        user_id: user?.id || "",
         firstName: onboarding.firstName || "",
         lastName: onboarding.lastName || "",
         university: onboarding.university || "",
         career: onboarding.career || "",
         semester: parseInt(onboarding.semester) || 1,
-        bio: `Interests: ${onboarding.careerInterests || ''}. Goals: ${onboarding.futureRoles || ''}`
+        strengths: stringToArray(onboarding.strengths),
+        weaknesses: stringToArray(onboarding.weaknesses),
+        studyStyle: onboarding.studyStyle || "",
+        careerInterests: stringToArray(onboarding.careerInterests),
+        futureRoles: stringToArray(onboarding.futureRoles),
+        skillsToLearn: stringToArray(onboarding.skillsToLearn)
       }
 
-      setUser(mockUser)
-      setOnboardingCompleted(true)
-      sessionStorage.removeItem("onboarding")
-      navigate("/")
-    } catch (err) {
+      // Call the backend onboarding API
+      const response = await authApi.onboarding(onboardingData)
+
+      if (response.data.success) {
+        // Update user store with the onboarding data
+        setUser({
+          id: user?.id || "",
+          email: email || "",
+          firstName: onboarding.firstName,
+          lastName: onboarding.lastName,
+          university: onboarding.university,
+          career: onboarding.career,
+          semester: parseInt(onboarding.semester) || 1,
+          bio: ""
+        })
+        
+        setOnboardingCompleted(true)
+        sessionStorage.removeItem("onboarding")
+        
+        // Navigate to home/main app
+        navigate("/")
+      }
+    } catch (err: any) {
       console.error("Onboarding failed:", err)
+      alert(err.response?.data?.detail || err.response?.data?.message || "Failed to complete onboarding")
     } finally {
       setLoading(false)
     }

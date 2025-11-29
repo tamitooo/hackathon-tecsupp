@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import Input from "../../components/Input"
 import Button from "../../components/Button"
@@ -15,6 +15,19 @@ export default function Step3Vocational() {
     skillsToLearn: "",
   })
   const navigate = useNavigate()
+
+  // Load data from sessionStorage on mount
+  useEffect(() => {
+    const savedData = sessionStorage.getItem("onboarding")
+    if (savedData) {
+      const parsed = JSON.parse(savedData)
+      setData({
+        careerInterests: parsed.careerInterests || "",
+        futureRoles: parsed.futureRoles || "",
+        skillsToLearn: parsed.skillsToLearn || "",
+      })
+    }
+  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
