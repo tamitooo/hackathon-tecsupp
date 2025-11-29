@@ -49,7 +49,7 @@ export default function Verify() {
         // Check if user has completed onboarding
         if (user.onboardingCompleted) {
           // User already onboarded, go to main app
-          navigate("/home")
+          navigate("/")
         } else {
           // New user or incomplete onboarding, go to onboarding
           navigate("/onboarding/step1")
