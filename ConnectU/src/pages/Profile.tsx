@@ -5,7 +5,7 @@ import { useUserStore } from "../store/userStore"
 import { useNavigate } from "react-router-dom"
 import Button from "../components/Button"
 import PageTransition from "../components/PageTransition"
-import { Edit2, Star, MapPin, Calendar, BookOpen, Trophy, Users, MessageCircle, Award } from "lucide-react"
+import { Edit2, Star, MapPin, Calendar, BookOpen, Trophy, Users, MessageCircle, Award, Gift, TrendingUp, Zap } from "lucide-react"
 
 export default function Profile() {
   const { user } = useAuthStore()
@@ -37,9 +37,39 @@ export default function Profile() {
     ]
   }
 
+  // Datos de ejemplo para el sistema de recompensas
+  const rewardsData = {
+    points: 1250,
+    level: 3,
+    nextLevelPoints: 500,
+    sessionsCompleted: 15,
+    successRate: 92,
+    studentsHelped: 8,
+    availableRewards: [
+      { id: 1, name: "Certificado 10 horas", points: 500, category: "academic" },
+      { id: 2, name: "Sesión Career Coaching", points: 800, category: "professional" },
+      { id: 3, name: "Hoodie ConnectU", points: 1200, category: "tangible" }
+    ],
+    recentActivity: [
+      { action: "Sesión completada", points: "+50", date: "Hoy" },
+      { action: "Feedback positivo", points: "+25", date: "Ayer" },
+      { action: "Alumno aprobó curso", points: "+200", date: "2 días" }
+    ]
+  }
+
+  const getLevelColor = (level: number) => {
+    const colors = ["text-gray-400", "text-green-400", "text-blue-400", "text-purple-400", "text-yellow-400", "text-red-400"]
+    return colors[level] || colors[0]
+  }
+
+  const getLevelName = (level: number) => {
+    const names = ["Novato", "Aprendiz", "Experto", "Maestro", "Leyenda", "Ídolo"]
+    return names[level] || "Novato"
+  }
+
   return (
     <PageTransition>
-      <div className="min-h-screen bg-[#1B1C31]">
+      <div className="min-h-screen bg-[#1B1C31] px-6 py-8">
 
       {/* Profile Content */}
       <div className="max-w-4xl mx-auto p-8">
@@ -93,18 +123,67 @@ export default function Profile() {
                   <span className="text-white font-semibold">{stats.matches}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-[#A09BD3]">Level</span>
-                  <span className="text-white font-semibold">{stats.level}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-[#A09BD3]">Points</span>
-                  <span className="text-white font-semibold">{stats.points}</span>
-                </div>
-                <div className="flex justify-between items-center">
                   <span className="text-[#A09BD3]">Study Sessions</span>
                   <span className="text-white font-semibold">{stats.sessions || 12}</span>
                 </div>
               </div>
+            </div>
+
+            {/* NUEVA SECCIÓN: Sistema de Recompensas */}
+            <div className="bg-[#2A2B45] rounded-2xl p-6 mt-6">
+              <h3 className="font-semibold text-white text-lg mb-4 flex items-center gap-2">
+                <Gift size={20} className="text-[#6149E9]" />
+                Tus Recompensas
+              </h3>
+              
+              {/* Nivel y Puntos */}
+              <div className="mb-4">
+                <div className="flex items-center justify-between mb-2">
+                  <span className={`text-lg font-bold ${getLevelColor(rewardsData.level)}`}>
+                    Nivel {rewardsData.level} - {getLevelName(rewardsData.level)}
+                  </span>
+                  <div className="flex items-center gap-1 text-orange-400">
+                    <Star className="w-4 h-4" />
+                    <span className="font-bold">{rewardsData.points}</span>
+                  </div>
+                </div>
+                
+                {/* Barra de progreso */}
+                <div className="w-full bg-[#1B1C31] rounded-full h-2 mb-1">
+                  <div 
+                    className="bg-gradient-to-r from-[#6149E9] to-[#A09BD3] h-2 rounded-full"
+                    style={{ width: `${(rewardsData.points % 1000) / 10}%` }}
+                  ></div>
+                </div>
+                <p className="text-[#A09BD3] text-xs text-right">
+                  {rewardsData.nextLevelPoints} puntos para el siguiente nivel
+                </p>
+              </div>
+
+              {/* Stats rápidas */}
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                <div className="bg-[#6149E9] bg-opacity-20 rounded-lg p-3 text-center">
+                  <TrendingUp className="w-4 h-4 text-green-400 mx-auto mb-1" />
+                  <div className="text-white text-sm font-semibold">{rewardsData.successRate}%</div>
+                  <div className="text-[#A09BD3] text-xs">Éxito</div>
+                </div>
+                <div className="bg-[#6149E9] bg-opacity-20 rounded-lg p-3 text-center">
+                  <Users className="w-4 h-4 text-blue-400 mx-auto mb-1" />
+                  <div className="text-white text-sm font-semibold">{rewardsData.studentsHelped}</div>
+                  <div className="text-[#A09BD3] text-xs">Estudiantes</div>
+                </div>
+              </div>
+
+              {/* Botón a tienda */}
+              <Button
+                onClick={() => navigate("/rewards")}
+                variant="primary"
+                size="sm"
+                className="w-full flex items-center justify-center gap-2"
+              >
+                <Gift size={16} />
+                Ver Tienda
+              </Button>
             </div>
           </div>
 
@@ -127,6 +206,80 @@ export default function Profile() {
               <p className="text-[#A09BD3] text-lg leading-relaxed">
                 {currentUser.bio || "Hello! I'm passionate about learning and collaborating with fellow students. I believe in the power of teamwork and mutual support in achieving academic success."}
               </p>
+            </div>
+
+            {/* NUEVA SECCIÓN: Recompensas Disponibles */}
+            <div className="bg-[#2A2B45] rounded-2xl p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="font-semibold text-white text-lg flex items-center gap-2">
+                  <Zap size={20} className="text-yellow-400" />
+                  Recompensas Disponibles
+                </h3>
+                <span className="text-[#A09BD3] text-sm">
+                  {rewardsData.availableRewards.length} disponibles
+                </span>
+              </div>
+              
+              <div className="space-y-3">
+                {rewardsData.availableRewards.map((reward) => (
+                  <div
+                    key={reward.id}
+                    className="flex items-center justify-between p-4 bg-[#6149E9] bg-opacity-10 rounded-lg border border-[#6149E9] border-opacity-30 hover:border-opacity-50 transition-all"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-[#6149E9] rounded-full flex items-center justify-center">
+                        <Gift size={18} className="text-white" />
+                      </div>
+                      <div>
+                        <p className="text-white font-semibold">{reward.name}</p>
+                        <p className="text-[#A09BD3] text-sm capitalize">{reward.category}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1 text-orange-400">
+                        <Star size={16} />
+                        <span className="font-bold">{reward.points}</span>
+                      </div>
+                      <button
+                        onClick={() => navigate("/rewards")}
+                        className="bg-[#6149E9] text-white px-3 py-1 rounded text-sm hover:bg-[#5540d6] transition-colors"
+                        disabled={rewardsData.points < reward.points}
+                      >
+                        Canjear
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* NUEVA SECCIÓN: Actividad Reciente */}
+            <div className="bg-[#2A2B45] rounded-2xl p-6">
+              <h3 className="font-semibold text-white text-lg mb-4 flex items-center gap-2">
+                <TrendingUp size={20} className="text-green-400" />
+                Actividad Reciente
+              </h3>
+              
+              <div className="space-y-3">
+                {rewardsData.recentActivity.map((activity, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between p-3 bg-[#1B1C31] rounded-lg"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-green-500 bg-opacity-20 rounded-full flex items-center justify-center">
+                        <TrendingUp size={14} className="text-green-400" />
+                      </div>
+                      <div>
+                        <p className="text-white text-sm font-medium">{activity.action}</p>
+                        <p className="text-[#A09BD3] text-xs">{activity.date}</p>
+                      </div>
+                    </div>
+                    <span className="text-green-400 font-bold text-sm">{activity.points}</span>
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* Courses Section */}

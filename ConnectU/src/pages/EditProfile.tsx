@@ -97,7 +97,7 @@ export default function EditProfile() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-[#1B1C31]">
+      <div className="min-h-screen bg-[#1B1C31] px-6 py-8 ">
       
 
       {/* Edit Profile Content */}

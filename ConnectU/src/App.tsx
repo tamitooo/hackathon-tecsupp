@@ -19,6 +19,7 @@ import Profile from "@/pages/Profile"
 import EditProfile from "@/pages/EditProfile"
 import Matches from "@/pages/Matches"
 import Chat from "@/pages/Chat"
+import Rewards from "@/pages/Rewards" 
 import Error404 from "@/pages/Error404"
 
 // Toaster para notificaciones
@@ -37,10 +38,10 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({
   const token = useAuthStore((state) => state.token)
   const onboardingCompleted = useAuthStore((state) => state.onboardingCompleted)
 
-  // COMENTADO PARA TESTING - Permite acceso sin token
-  // if (!token) {
-  //   return <Navigate to="/login" replace />
-  // }
+ 
+  if (!token) {
+     return <Navigate to="/login" replace />
+   }
 
   if (requireOnboarding && !onboardingCompleted) {
     return <Navigate to="/onboarding/step1" replace />
@@ -117,6 +118,11 @@ export default function App() {
             <Route 
               path="/chat" 
               element={<PublicRoute element={<Chat />} />} 
+            />
+            {/*  AGREGA ESTA RUTA PARA REWARDS */}
+            <Route 
+              path="/rewards" 
+              element={<PublicRoute element={<Rewards />} />} 
             />
           </Route>
 
